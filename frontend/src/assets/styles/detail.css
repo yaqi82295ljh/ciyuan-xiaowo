@@ -252,8 +252,6 @@ a{ color: inherit; }
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: var(--sp-2);
 	padding: var(--sp-3) 0;
-	border-top: 1px solid var(--line);
-	border-bottom: 1px solid var(--line);
 	text-align: center;
 }
 .dt-stat b{
@@ -268,10 +266,6 @@ a{ color: inherit; }
 	display: block;
 	font-size: var(--fs-xs);
 	color: var(--ink-400);
-}
-
-.dt-stat + .dt-stat{
-	border-left: 1px solid var(--line);
 }
 
 .dt-acts{
@@ -657,13 +651,12 @@ a{ color: inherit; }
 
 @media (max-width: 420px){
 	.dt-acts .dt-btn{ flex: 1 1 auto; }
-	.dt-stats{ grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0; }
 
-	.dt-stat{ padding: var(--sp-3) 0; }
-	.dt-stat + .dt-stat{ border-left: 0; }
-	.dt-stat:nth-child(2n){ border-left: 1px solid var(--line); }
+	/* 四项挤一行才读得顺，分隔线全部去掉，靠留白分区 */
+	.dt-stats{ gap: 0; padding: var(--sp-2) 0; }
 
-	.dt-stat:nth-child(n+3){ border-top: 1px solid var(--line); }
+	.dt-stat{ padding: var(--sp-2) 0; }
+	.dt-stat b{ font-size: var(--fs-lg); }
 
 	.dt-author{ border-bottom: 0; padding-bottom: var(--sp-3); }
 }
