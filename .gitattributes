@@ -1,0 +1,3 @@
+# 让 GitHub 的语言统计反映真实技术栈（否则会被体积最大的 CSS 带偏成 "CSS 项目"）
+*.css linguist-detectable=false
+*.html linguist-detectable=false

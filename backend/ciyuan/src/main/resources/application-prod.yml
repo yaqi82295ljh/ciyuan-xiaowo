@@ -1,0 +1,66 @@
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+  forward-headers-strategy: framework
+  tomcat:
+    # 上传超限时，Tomcat 要先把没读完的请求体吞掉才能回响应。
+    # 默认只吞 2MB，超了就直接断连接，前端只会看到 "Failed to fetch"，
+    # 拿不到 413。设成 -1 = 不限制，让 Spring 的报错能正常送回去。
+    max-swallow-size: -1
+
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ciyuan_xiaowo}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai"
+    username: ${DB_USER:ciyuan}
+    password: ${DB_PASSWORD:}
+
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 15
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+
+    banner: false
+    db-config:
+
+      id-type: auto
+
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+sa-token:
+  token-name: satoken
+  timeout: 604800
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+
+  is-read-cookie: true
+  cookie:
+    secure: true
+    http-only: true
+
+logging:
+  level:
+    root: warn
+    org.example.ljh.ciyuan: info
+  file:
+    name: /opt/ciyuan/logs/app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 20MB
+      max-history: 7

@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.example.ljh'
+version = '0.0.1-SNAPSHOT'
+description = 'ciyuan'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// MyBatis-Plus 的统一版本管理。
+// 官方推荐用它的 BOM 而不是给每个依赖手写版本号，原因见下面 jsqlparser 那条注释。
+dependencyManagement {
+    imports {
+        mavenBom 'com.baomidou:mybatis-plus-bom:3.5.17'
+    }
+}
+
+dependencies {
+    // Web 层：内嵌 Tomcat + Spring MVC。起步阶段只需要这一个
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    // MyBatis-Plus。
+    // 注意 3.5.13 起才有 spring-boot4 专用 starter，写 spring-boot3 那个在 Boot 4 下起不来。
+    implementation 'com.baomidou:mybatis-plus-spring-boot4-starter'
+
+    // jsqlparser 从 MyBatis-Plus 3.5.9 起被拆成了「可选依赖」，不再由 starter 自动带进来。
+    // 分页插件 PaginationInnerInterceptor、动态表名等功能都靠它，不加的话用到时才报
+    // ClassNotFoundException，所以这里显式引上。版本走上面的 BOM，和 starter 天然对齐。
+    implementation 'com.baomidou:mybatis-plus-jsqlparser'
+
+    // MySQL JDBC 驱动。版本由 Spring Boot 的 BOM 统一管理，不用自己写版本号。
+    // 新加了 MyBatis-Plus 之后它就不再是 runtimeOnly 了：starter 会转交 spring-boot-starter-jdbc，
+    // 由连接池（HikariCP）负责建连，驱动需要参与自动配置的探测，放 implementation 更稳妥。
+    implementation 'com.mysql:mysql-connector-j'
+
+    // BCrypt 密码加密与校验（LoginContr 里用到）。
+    // 注意只引 spring-security-crypto 这一个模块，不要引 spring-boot-starter-security：
+    // 我们要的只是 BCrypt.hashpw / BCrypt.checkpw 两个静态方法，而那个 starter 会带上一整
+    // 套过滤器链，引了之后所有接口都会被要求先登录，反而添乱。
+    // 版本同样由 Spring Boot 的 BOM 管理，不用自己写。
+    implementation 'org.springframework.security:spring-security-crypto'
+
+    // Sa-Token 权限认证：登录态 + 拦截器 + 注解鉴权。
+    // ⚠️ Spring Boot 4 必须用 spring-boot4 这个 starter。写 spring-boot3 那个在 Boot 4 下起不来；
+    //    而且 Boot4 版**只有 1.45.0 和 1.46.0**，1.44.0 根本没有这个构件（会 404）。
+    // ⚠️ 不要顺手引 spring-boot-starter-security，理由和上面 BCrypt 那条一样：
+    //    它会带上一整套过滤器链，引了之后所有接口都会被要求先登录。
+    // 它是纯内存的，不需要建任何数据库表。
+    implementation 'cn.dev33:sa-token-spring-boot4-starter:1.46.0'
+
+    // 测试：Boot 4 里每类技术都有配套的 *-test starter，
+    // 它会传递 spring-boot-starter-test，所以不需要再单独引它
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Lombok：编译期生成 getter/setter/构造器，编译完就没它什么事了。
+    // Maven 里写 <optional>true</optional> 表示「不向下游传递」，Gradle 没有 optional 这个概念，
+    // 对应的是 compileOnly —— 它只进编译类路径，不进 runtimeClasspath，
+    // 所以既不会传递给别人，也不会被打进 fat jar（BOOT-INF/lib 里不会出现 lombok）。
+    compileOnly 'org.projectlombok:lombok'
+
+    // 关键的一步，Maven 不需要写但 Gradle 必须要：
+    // compileOnly 只让注解能被「看见」，真正跑注解处理器得靠 annotationProcessor 配置。
+    // 少了这一行，代码能编译过，但生成的 getter/setter 全都不存在，报 "cannot find symbol"。
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 测试代码里也想用 @Data 之类的话，这两行不能少（testCompileOnly 不会继承 compileOnly）
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

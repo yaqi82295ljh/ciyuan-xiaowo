@@ -1,0 +1,5 @@
+# 复制此文件为 application-local.yml，然后填上你自己本机的数据库密码。
+# application-local.yml 已被 .gitignore 忽略，不会上传到 GitHub。
+spring:
+  datasource:
+    password: "你的MySQL密码"

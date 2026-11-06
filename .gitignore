@@ -1,0 +1,42 @@
+# ===== 运行数据 =====
+# 用户上传的图片，体积大且属于运行数据，不进仓库
+uploads/
+
+# ===== 本地配置 / 密钥 =====
+# 数据库密码等私有配置只保留在本地
+**/application-local.yml
+!**/application-local.yml.example
+*.pem
+*.key
+
+# ===== 备份文件 =====
+*.bak
+*.orig
+
+# ===== 草稿副本目录 =====
+backend/ciyuan - 副本/
+
+# ===== IDE =====
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+frontend/.workbuddy/
+
+# ===== 构建产物 =====
+backend/ciyuan/build/
+backend/ciyuan/.gradle/
+backend/ciyuan/out/
+backend/ciyuan/bin/
+
+# ===== 前端（Vue 工程）=====
+frontend/node_modules/
+frontend/dist/
+frontend/docs/screenshots/
+frontend/.vite/
+
+# ===== 系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini

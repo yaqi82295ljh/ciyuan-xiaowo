@@ -1,0 +1,155 @@
+.plist{
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-3);
+}
+
+.plist-empty{
+	margin: 0;
+	padding: var(--sp-6) var(--sp-4);
+	text-align: center;
+	font-size: var(--fs-md);
+	color: var(--ink-400);
+	border: 1px dashed var(--line-blue);
+	border-radius: var(--r-lg);
+	background-color: rgba(255, 255, 255, 0.55);
+}
+
+.pitem{
+	position: relative;
+
+	padding: var(--sp-4) var(--sp-4) var(--sp-4) 22px;
+	border: 1px solid var(--line);
+	border-radius: var(--r-md);
+	background-color: var(--surface);
+	box-shadow: var(--sh-1);
+	transition: border-color var(--dur-fast) var(--ease),
+		box-shadow var(--dur-fast) var(--ease);
+}
+
+.pitem:hover{
+	border-color: var(--blue-300);
+	box-shadow: var(--sh-2);
+}
+
+.pitem::before{
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 12px;
+	bottom: 12px;
+	width: 4px;
+	border-radius: 0 var(--r-xs) var(--r-xs) 0;
+	background-color: var(--blue-200);
+}
+
+.pitem-head{
+	display: flex;
+	align-items: center;
+	gap: var(--sp-2);
+	margin-bottom: 6px;
+}
+
+.pitem-title{
+	margin: 0;
+	font-size: var(--fs-lg);
+	font-weight: 600;
+	color: var(--ink-900);
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.pitem-time{
+	flex-shrink: 0;
+	margin-left: auto;
+	font-family: var(--font-display);
+	font-size: var(--fs-sm);
+	color: var(--ink-400);
+}
+
+.pitem-text{
+	margin: 0;
+	font-size: var(--fs-base);
+	line-height: 1.75;
+	color: var(--ink-700);
+}
+
+.pitem--pin::before{
+	background-color: var(--blue-600);
+}
+
+.pitem-badge{
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	height: 18px;
+	padding: 0 9px;
+	border-radius: var(--r-full);
+	font-size: var(--fs-xs);
+	font-weight: 600;
+	line-height: 1;
+	color: #fff;
+	background-color: var(--blue-600);
+}
+
+.pitem.is-unread .pitem-title::before{
+	content: "";
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 7px;
+	border-radius: 50%;
+	background-color: var(--dot);
+	vertical-align: middle;
+}
+
+.plist--mail .pitem{
+	display: flex;
+	gap: var(--sp-3);
+	align-items: flex-start;
+}
+
+.pitem-avatar{
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	font-size: var(--fs-md);
+	font-weight: 600;
+	line-height: 1;
+	color: var(--blue-700);
+	background-color: var(--blue-100);
+	border: 1px solid var(--blue-200);
+	user-select: none;
+}
+
+.pitem-body{
+	flex: 1;
+	min-width: 0;
+}
+
+@media (max-width: 760px){
+	.pitem{
+		padding: var(--sp-3) var(--sp-3) var(--sp-3) 18px;
+	}
+	.pitem-title{
+		font-size: var(--fs-md);
+	}
+	.pitem-text{
+		font-size: var(--fs-base);
+		line-height: 1.7;
+	}
+	.pitem-avatar{
+		width: 28px;
+		height: 28px;
+		font-size: var(--fs-sm);
+	}
+	.pitem-time{
+		font-size: var(--fs-xs);
+	}
+}
